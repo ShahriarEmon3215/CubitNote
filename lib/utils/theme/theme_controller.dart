@@ -28,8 +28,8 @@ final darkTheme = ThemeData(
         .copyWith(brightness: Brightness.dark));
 
 final lightTheme = ThemeData(
-    primaryColor: Colors.white,
-    dividerColor: Colors.white54,
+    primaryColor: Color.fromARGB(255, 255, 255, 255),
+    dividerColor: Color.fromARGB(137, 0, 0, 0),
     colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.grey)
         .copyWith(background: Color(0xFFE5E5E5))
         .copyWith(secondary: Colors.black)
