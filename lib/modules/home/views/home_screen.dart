@@ -52,43 +52,42 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _noteItemView(ThemeController themeController, BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(10.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(13),
-        color: themeController.isDarkTheme!
-            ? AppColors.cardColorDark
-            : AppColors.cardColorLight,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "Note asdfsdf sdff asdfsdfg asdfsd",
-            maxLines: 2,
-            style: themeController.isDarkTheme!
-                ? titleTextStyleDark
-                : titleTextStyleLight,
-          ),
-          AppValues.spaceH10,
-          Text(
-            "02 FEB 2023",
-            maxLines: 2,
-            style: themeController.isDarkTheme!
-                ? bodyTextStyleDark
-                : bodyTextStyleLight,
-          ),
-          AppValues.spaceH10,
-          Container(
-            child: Text(
-              "Note asdfsdf sdff asdfsdfg asdfsd asdfadsf asdfadsf asdfads asddfasdf asdfasd dfa fads a a dafads asdf asdfads fadsfasdf adsfadf s df",
-              maxLines: 3,
-              style: themeController.isDarkTheme!
-                  ? bodyTextStyleDark
-                  : bodyTextStyleLight,
+    return InkWell(
+      onTap: () {
+        Navigator.pushNamed(context, '/note-view');
+      },
+      child: Container(
+        padding: const EdgeInsets.all(10.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(13),
+          color: themeController.isDarkTheme!
+              ? AppColors.cardColorDark
+              : AppColors.cardColorLight,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Note asdfsdf sdff asdfsdfg asdfsd",
+              maxLines: 2,
+              style: titleTextStyle(themeController.isDarkTheme!),
             ),
-          ),
-        ],
+            AppValues.spaceH10,
+            Text(
+              "02 FEB 2023",
+              maxLines: 2,
+              style: bodyTextStyle(themeController.isDarkTheme!),
+            ),
+            AppValues.spaceH10,
+            Container(
+              child: Text(
+                "Note asdfsdf sdff asdfsdfg asdfsd asdfadsf asdfadsf asdfads asddfasdf asdfasd dfa fads a a dafads asdf asdfads fadsfasdf adsfadf s df",
+                maxLines: 3,
+                style: bodyTextStyle(themeController.isDarkTheme!),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -109,9 +108,7 @@ class HomeScreen extends StatelessWidget {
           Spacer(),
           Text(
             "Cubit Notes",
-            style: themeController.isDarkTheme!
-                ? appBarTextStyleDark
-                : appBarTextStyleLight,
+            style: appBarTextStyle(themeController.isDarkTheme!),
           ),
           Spacer(),
           _kDarkModeButton(themeController),

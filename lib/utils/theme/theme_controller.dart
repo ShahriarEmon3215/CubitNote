@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class ThemeController with ChangeNotifier {
+class ThemeController extends ChangeNotifier {
   bool? isDarkTheme;
 
   ThemeController({this.isDarkTheme});
