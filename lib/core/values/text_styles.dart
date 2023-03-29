@@ -38,12 +38,26 @@ TextStyle bodyTextStyle(bool isDarkMode) {
   if (isDarkMode) {
     return TextStyle(
       fontSize: 16,
-      color: Color.fromARGB(255, 230, 230, 230),
+      color: Color.fromARGB(255, 181, 180, 194),
     );
   } else {
     return TextStyle(
       fontSize: 16,
       color: Color.fromARGB(255, 104, 104, 104),
+    );
+  }
+}
+
+TextStyle dateColor(bool isDarkMode) {
+  if (isDarkMode) {
+    return TextStyle(
+      fontSize: 16,
+      color: Color.fromARGB(255, 143, 130, 165),
+    );
+  } else {
+    return TextStyle(
+      fontSize: 16,
+      color: Color.fromARGB(255, 230, 230, 230),
     );
   }
 }

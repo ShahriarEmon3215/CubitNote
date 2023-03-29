@@ -1,20 +1,20 @@
 import 'package:cubit_note/core/values/app_colors.dart';
 import 'package:cubit_note/core/values/app_values.dart';
 import 'package:cubit_note/core/values/text_styles.dart';
+import 'package:cubit_note/db_helper/sqfile_database.dart';
+import 'package:cubit_note/modules/home/controllers/home_controller.dart';
 import 'package:cubit_note/modules/note_view_add_edit/controllers/note_view_controller.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
-import 'package:flutter/src/widgets/placeholder.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import '../../../models/note.dart';
 import '../../../utils/theme/theme_controller.dart';
+import '../../home/controllers/home_controller.dart';
 
 class NoteViewScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final themeController = Provider.of<ThemeController>(context);
-    final noteViewController = Provider.of<NoteViewController>(context, listen: false);
+    final noteController = Provider.of<NoteController>(context, listen: false);
     final Size size = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Theme.of(context).primaryColor,
@@ -31,9 +31,9 @@ class NoteViewScreen extends StatelessWidget {
                 child: SingleChildScrollView(
                   child: Column(
                     children: [
-                      _labelTextField(noteViewController),
+                      _labelTextField(noteController),
                       AppValues.spaceH20,
-                      _bodyTextField(noteViewController),
+                      _bodyTextField(noteController),
                     ],
                   ),
                 ),
@@ -43,7 +43,14 @@ class NoteViewScreen extends StatelessWidget {
         ),
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
+        onPressed: () {
+          noteController.insertNote(Note(
+            title: noteController.titleController.text,
+            body: noteController.bodyController.text,
+            creationDate: DateTime.now().toString(),
+            lastModified: DateTime.now().toString(),
+          ));
+        },
         label: Text(
           "Save",
           style: titleTextStyle(themeController.isDarkTheme!),
@@ -55,7 +62,7 @@ class NoteViewScreen extends StatelessWidget {
     );
   }
 
-  TextFormField _bodyTextField(NoteViewController noteViewController) {
+  TextFormField _bodyTextField(NoteController noteViewController) {
     return TextFormField(
       controller: noteViewController.bodyController,
       keyboardType: TextInputType.multiline,
@@ -70,7 +77,7 @@ class NoteViewScreen extends StatelessWidget {
     );
   }
 
-  TextFormField _labelTextField(NoteViewController noteViewController) {
+  TextFormField _labelTextField(NoteController noteViewController) {
     return TextFormField(
       maxLines: null,
       controller: noteViewController.titleController,
@@ -99,34 +106,16 @@ class NoteViewScreen extends StatelessWidget {
               onPressed: () {
                 Navigator.pop(context);
               },
-              icon: Icon(Icons.arrow_back_ios)),
+              icon: Icon(Icons.arrow_back_ios)), 
           Spacer(),
           Text(
             "Note Details",
             style: appBarTextStyle(themeController.isDarkTheme!),
           ),
-          Spacer(),
-          _editButton()
         ],
       ),
     );
   }
 
-  Widget _editButton() {
-    return Container(
-      child: ElevatedButton(
-          onPressed: () {},
-          style: ElevatedButton.styleFrom(
-              backgroundColor: Color.fromARGB(255, 235, 235, 235),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20))),
-          child: Row(
-            children: [
-              Icon(Icons.edit, size: 18),
-              AppValues.spaceH10,
-              Text("EDIT"),
-            ],
-          )),
-    );
-  }
+
 }

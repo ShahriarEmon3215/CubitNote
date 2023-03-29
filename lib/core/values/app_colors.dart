@@ -7,6 +7,7 @@ abstract class AppColors {
   static const Color appBarColor = Color(0xFF38686A);
   static const Color appBarIconColor = Color(0xFFFFFFFF);
   static const Color appBarTextColor = Color(0xFFFFFFFF);
+  static const Color dateColor = Color.fromARGB(255, 122, 110, 141);
 
   static const Color green = Colors.green;
   static const Color centerTextColor = Colors.grey;

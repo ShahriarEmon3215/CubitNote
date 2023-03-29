@@ -1,6 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.emon.cubit.ai.cubit_note">
+
    <application
+        android:requestLegacyExternalStorage="true"
         android:label="Cubit Notes"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">

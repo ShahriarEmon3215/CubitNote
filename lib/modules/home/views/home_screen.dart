@@ -1,5 +1,6 @@
 import 'package:cubit_note/core/values/app_colors.dart';
 import 'package:cubit_note/core/values/app_values.dart';
+import 'package:cubit_note/modules/home/controllers/home_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -8,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_grid_view.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_tile.dart';
 import '../../../core/values/text_styles.dart';
+import '../../../models/note.dart';
 import '../../../utils/theme/theme_controller.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -34,24 +36,29 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _BodyUi(BuildContext context, ThemeController themeController) {
-    return Container(
-      margin: EdgeInsets.symmetric(horizontal: 15),
-      height: MediaQuery.of(context).size.height -
-          (65 + MediaQuery.of(context).padding.top),
-      child: StaggeredGridView.countBuilder(
-        crossAxisCount: 4,
-        itemCount: 10,
-        itemBuilder: (BuildContext context, int index) =>
-            _noteItemView(themeController, context),
-        staggeredTileBuilder: (int index) =>
-            new StaggeredTile.count(2, index.isEven ? 1.8 : 2.0),
-        mainAxisSpacing: 8.0,
-        crossAxisSpacing: 8.0,
-      ),
+    return Consumer<NoteController>(
+      builder: (BuildContext context, controller, Widget? child) {
+        return Expanded(
+          child: Container(
+            margin: EdgeInsets.symmetric(horizontal: 15),
+            child: StaggeredGridView.countBuilder(
+              crossAxisCount: 4,
+              itemCount: controller.notes.length,
+              itemBuilder: (BuildContext context, int index) => _noteItemView(
+                  themeController, context, controller.notes[index]),
+              staggeredTileBuilder: (int index) =>
+                  new StaggeredTile.count(2, index.isEven ? 1.5 : 1.7),
+              mainAxisSpacing: 8.0,
+              crossAxisSpacing: 8.0,
+            ),
+          ),
+        );
+      },
     );
   }
 
-  Widget _noteItemView(ThemeController themeController, BuildContext context) {
+  Widget _noteItemView(
+      ThemeController themeController, BuildContext context, Note note) {
     return InkWell(
       onTap: () {
         Navigator.pushNamed(context, '/note-view');
@@ -68,7 +75,7 @@ class HomeScreen extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Note asdfsdf sdff asdfsdfg asdfsd",
+              note.title ?? "No Title",
               maxLines: 2,
               style: titleTextStyle(themeController.isDarkTheme!),
             ),
@@ -76,12 +83,12 @@ class HomeScreen extends StatelessWidget {
             Text(
               "02 FEB 2023",
               maxLines: 2,
-              style: bodyTextStyle(themeController.isDarkTheme!),
+              style: dateColor(themeController.isDarkTheme!),
             ),
             AppValues.spaceH10,
             Container(
               child: Text(
-                "Note asdfsdf sdff asdfsdfg asdfsd asdfadsf asdfadsf asdfads asddfasdf asdfasd dfa fads a a dafads asdf asdfads fadsfasdf adsfadf s df",
+                note.body ?? "",
                 maxLines: 3,
                 style: bodyTextStyle(themeController.isDarkTheme!),
               ),
@@ -111,7 +118,12 @@ class HomeScreen extends StatelessWidget {
             style: appBarTextStyle(themeController.isDarkTheme!),
           ),
           Spacer(),
-          _kDarkModeButton(themeController),
+          //_kDarkModeButton(themeController),
+          IconButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/note-view');
+              },
+              icon: Icon(Icons.add))
         ],
       ),
     );
