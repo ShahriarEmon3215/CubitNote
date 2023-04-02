@@ -1,9 +1,8 @@
-import 'package:cubit_note/modules/home/controllers/home_controller.dart';
-import 'package:cubit_note/modules/home/controllers/home_controller.dart';
-import 'package:cubit_note/modules/home/controllers/home_controller.dart';
-import 'package:cubit_note/modules/home/views/home_screen.dart';
-import 'package:cubit_note/modules/note_view_add_edit/controllers/note_view_controller.dart';
-import 'package:cubit_note/modules/note_view_add_edit/views/note_view.dart';
+import 'package:cubit_note/controllers/home_controller.dart';
+import 'package:cubit_note/controllers/home_controller.dart';
+import 'package:cubit_note/controllers/home_controller.dart';
+import 'package:cubit_note/views/home_screen.dart';
+import 'package:cubit_note/views/note_view.dart';
 import 'package:cubit_note/utils/theme/theme_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -18,8 +17,7 @@ void main() {
         providers: [
           ChangeNotifierProvider<ThemeController>(
               create: (_) => ThemeController(isDarkTheme: isDarkMode)),
-          ChangeNotifierProvider<NoteViewController>(
-              create: (_) => NoteViewController()),
+       
           ChangeNotifierProvider<NoteController>(
               create: (_) => NoteController()),
         ],

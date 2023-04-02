@@ -43,7 +43,7 @@ TextStyle bodyTextStyle(bool isDarkMode) {
   } else {
     return TextStyle(
       fontSize: 16,
-      color: Color.fromARGB(255, 104, 104, 104),
+      color: Color.fromARGB(255, 87, 87, 87),
     );
   }
 }
@@ -57,7 +57,7 @@ TextStyle dateColor(bool isDarkMode) {
   } else {
     return TextStyle(
       fontSize: 16,
-      color: Color.fromARGB(255, 230, 230, 230),
+      color: Color.fromARGB(255, 148, 148, 148),
     );
   }
 }

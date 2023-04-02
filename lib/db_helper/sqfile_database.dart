@@ -59,7 +59,7 @@ class SqfliteDatabaseHelper {
   Future<List<Note>> getNotes() async {
     Database db = await database;
     List<Note> notes = <Note>[];
-    var noteMapList = await db.query("note_table", orderBy: 'id');
+    var noteMapList = await db.query("note_table", orderBy: 'creationDate');
 
     if (noteMapList.length == 0) return notes;
     for (int i = 0; i < noteMapList.length; i++) {
@@ -71,7 +71,8 @@ class SqfliteDatabaseHelper {
   Future<int> updateNote(Note note) async {
     Database db = await database;
     var result = await db.update("note_table", note.toJson(),
-        where: "id = ?", whereArgs: [note.id]);
+        where: "id=?", whereArgs: [note.id]);
+    print(result);
     return result;
   }
 

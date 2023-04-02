@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 
-import '../../../db_helper/sqfile_database.dart';
-import '../../../models/note.dart';
+import '../db_helper/sqfile_database.dart';
+import '../models/note.dart';
 
 class NoteController extends ChangeNotifier {
   static final SqfliteDatabaseHelper _database = SqfliteDatabaseHelper();

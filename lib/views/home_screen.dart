@@ -1,6 +1,6 @@
 import 'package:cubit_note/core/values/app_colors.dart';
 import 'package:cubit_note/core/values/app_values.dart';
-import 'package:cubit_note/modules/home/controllers/home_controller.dart';
+import 'package:cubit_note/controllers/home_controller.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -8,9 +8,10 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_grid_view.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_tile.dart';
-import '../../../core/values/text_styles.dart';
-import '../../../models/note.dart';
-import '../../../utils/theme/theme_controller.dart';
+import '../core/helpers/custom_alert.dart';
+import '../core/values/text_styles.dart';
+import '../models/note.dart';
+import '../utils/theme/theme_controller.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -45,7 +46,11 @@ class HomeScreen extends StatelessWidget {
               crossAxisCount: 4,
               itemCount: controller.notes.length,
               itemBuilder: (BuildContext context, int index) => _noteItemView(
-                  themeController, context, controller.notes[index]),
+                  themeController,
+                  context,
+                  controller.notes[index],
+                  index,
+                  controller),
               staggeredTileBuilder: (int index) =>
                   new StaggeredTile.count(2, index.isEven ? 1.5 : 1.7),
               mainAxisSpacing: 8.0,
@@ -57,11 +62,37 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
-  Widget _noteItemView(
-      ThemeController themeController, BuildContext context, Note note) {
+  Widget _noteItemView(ThemeController themeController, BuildContext context,
+      Note note, int index, NoteController noteController) {
     return InkWell(
       onTap: () {
-        Navigator.pushNamed(context, '/note-view');
+        Navigator.pushNamed(context, '/note-view',
+            arguments: [note, "DETAILS", index]);
+      },
+      onLongPress: () {
+        showDialog(
+          context: context,
+          builder: (context) {
+            return AlertDialog(
+              backgroundColor: AppColors.primaryColor,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(20)),
+              title: Text(
+                "Are your sure want to delete?",
+                style: TextStyle(color: Color.fromARGB(255, 36, 36, 54)),
+              ),
+              content: Row(
+                children: [
+                  _ctmButton(
+                      "CANCEL", context, noteController, note.id!, index),
+                  Spacer(),
+                  _ctmButton(
+                      "CONFIRM", context, noteController, note.id!, index)
+                ],
+              ),
+            );
+          },
+        );
       },
       child: Container(
         padding: const EdgeInsets.all(10.0),
@@ -99,6 +130,36 @@ class HomeScreen extends StatelessWidget {
     );
   }
 
+  Widget _ctmButton(String label, BuildContext context,
+          NoteController controller, int id, int index) =>
+      ElevatedButton(
+          style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30),
+              )),
+          onPressed: () async {
+            if (label == "CONFIRM") {
+              int? result = await controller.deleteNote(id, index);
+              if (result > 0) {
+                CustomAlert.successAlert(
+                    context: context,
+                    title: "Deleted",
+                    body: "Your note deleted permanently.");
+              } else {
+                CustomAlert.errorAlert(
+                    context: context,
+                    title: "Failed to delete",
+                    body: "Something went wrong.");
+              }
+            }
+            Navigator.pop(context);
+          },
+          child: Text(
+            label,
+            style: TextStyle(color: Colors.white),
+          ));
+
   Widget _AppBar(BuildContext context, ThemeController themeController) {
     return Container(
       height: 55,
@@ -108,20 +169,17 @@ class HomeScreen extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          IconButton(
-            onPressed: () {},
-            icon: FaIcon(FontAwesomeIcons.list),
-          ),
+          _kDarkModeButton(themeController),
           Spacer(),
           Text(
             "Cubit Notes",
             style: appBarTextStyle(themeController.isDarkTheme!),
           ),
           Spacer(),
-          //_kDarkModeButton(themeController),
           IconButton(
               onPressed: () {
-                Navigator.pushNamed(context, '/note-view');
+                Navigator.pushNamed(context, '/note-view',
+                    arguments: [Note(), "ADD NOTE", null]);
               },
               icon: Icon(Icons.add))
         ],
@@ -136,18 +194,10 @@ class HomeScreen extends StatelessWidget {
         var prefs = await SharedPreferences.getInstance();
         await prefs.setBool('darkMode', themeController.isDarkTheme!);
       },
-      child: Container(
-        height: 35,
-        width: 35,
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(50),
+      child: Center(
+        child: Icon(
+          themeController.isDarkTheme! ? Icons.dark_mode : Icons.sunny,
           color: themeController.isDarkTheme! ? Colors.white : Colors.black,
-        ),
-        child: Center(
-          child: Icon(
-            themeController.isDarkTheme! ? Icons.dark_mode : Icons.sunny,
-            color: themeController.isDarkTheme! ? Colors.black : Colors.white,
-          ),
         ),
       ),
     );
