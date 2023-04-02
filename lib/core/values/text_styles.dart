@@ -48,6 +48,20 @@ TextStyle bodyTextStyle(bool isDarkMode) {
   }
 }
 
+TextStyle lastModifiedDateTextStyle(bool isDarkMode) {
+  if (isDarkMode) {
+    return TextStyle(
+      fontSize: 12,
+      color: Color.fromARGB(255, 143, 130, 165),
+    );
+  } else {
+    return TextStyle(
+      fontSize: 12,
+      color: Color.fromARGB(255, 148, 148, 148),
+    );
+  }
+}
+
 TextStyle dateColor(bool isDarkMode) {
   if (isDarkMode) {
     return TextStyle(

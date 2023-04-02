@@ -1,9 +1,8 @@
 import 'package:cubit_note/core/values/app_colors.dart';
 import 'package:cubit_note/core/values/app_values.dart';
 import 'package:cubit_note/controllers/home_controller.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:staggered_grid_view_flutter/widgets/staggered_grid_view.dart';
@@ -20,20 +19,30 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final themeController = Provider.of<ThemeController>(context);
     return Scaffold(
-        backgroundColor: Theme.of(context).primaryColor,
-        body: SafeArea(
-          child: Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            child: Column(
-              children: [
-                _AppBar(context, themeController),
-                AppValues.spaceH10,
-                _BodyUi(context, themeController),
-              ],
-            ),
+      backgroundColor: Theme.of(context).primaryColor,
+      body: SafeArea(
+        child: Container(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          child: Column(
+            children: [
+              _AppBar(context, themeController),
+              AppValues.spaceH10,
+              _BodyUi(context, themeController),
+            ],
           ),
-        ));
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.pushNamed(context, '/note-view',
+              arguments: [Note(), "ADD NOTE", null]);
+        },
+        backgroundColor: Colors.green,
+        child: Icon(Icons.add),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+    );
   }
 
   Widget _BodyUi(BuildContext context, ThemeController themeController) {
@@ -52,7 +61,7 @@ class HomeScreen extends StatelessWidget {
                   index,
                   controller),
               staggeredTileBuilder: (int index) =>
-                  new StaggeredTile.count(2, index.isEven ? 1.5 : 1.7),
+                  new StaggeredTile.count(2, index.isEven ? 1.8 : 2.0),
               mainAxisSpacing: 8.0,
               crossAxisSpacing: 8.0,
             ),
@@ -112,7 +121,8 @@ class HomeScreen extends StatelessWidget {
             ),
             AppValues.spaceH10,
             Text(
-              "02 FEB 2023",
+              DateFormat('dd MMM yyy')
+                  .format(DateTime.parse(note.creationDate!)),
               maxLines: 2,
               style: dateColor(themeController.isDarkTheme!),
             ),
@@ -124,6 +134,14 @@ class HomeScreen extends StatelessWidget {
                 style: bodyTextStyle(themeController.isDarkTheme!),
               ),
             ),
+            Spacer(),
+            if (note.lastModified != null)
+              Text(
+                "Last modified on " +
+                    DateFormat('dd MMM yyy')
+                        .format(DateTime.parse(note.lastModified!)),
+                style: lastModifiedDateTextStyle(themeController.isDarkTheme!),
+              )
           ],
         ),
       ),
@@ -176,12 +194,12 @@ class HomeScreen extends StatelessWidget {
             style: appBarTextStyle(themeController.isDarkTheme!),
           ),
           Spacer(),
-          IconButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/note-view',
-                    arguments: [Note(), "ADD NOTE", null]);
-              },
-              icon: Icon(Icons.add))
+          // IconButton(
+          //     onPressed: () {
+          //       Navigator.pushNamed(context, '/note-view',
+          //           arguments: [Note(), "ADD NOTE", null]);
+          //     },
+          //     icon: Icon(Icons.add))
         ],
       ),
     );

@@ -96,7 +96,7 @@ class _NoteViewScreenState extends State<NoteViewScreen> {
         title: noteController.titleController.text,
         body: noteController.bodyController.text,
         creationDate: DateTime.now().toString(),
-        lastModified: DateTime.now().toString(),
+        lastModified: null,
       ));
 
       if (result > 0) {
