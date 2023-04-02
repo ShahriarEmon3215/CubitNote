@@ -48,25 +48,29 @@ class HomeScreen extends StatelessWidget {
   Widget _BodyUi(BuildContext context, ThemeController themeController) {
     return Consumer<NoteController>(
       builder: (BuildContext context, controller, Widget? child) {
-        return Expanded(
-          child: Container(
-            margin: EdgeInsets.symmetric(horizontal: 15),
-            child: StaggeredGridView.countBuilder(
-              crossAxisCount: 4,
-              itemCount: controller.notes.length,
-              itemBuilder: (BuildContext context, int index) => _noteItemView(
-                  themeController,
-                  context,
-                  controller.notes[index],
-                  index,
-                  controller),
-              staggeredTileBuilder: (int index) =>
-                  new StaggeredTile.count(2, index.isEven ? 1.8 : 2.0),
-              mainAxisSpacing: 8.0,
-              crossAxisSpacing: 8.0,
+        if (controller.notes.length == 0) {
+          return Expanded(child: Center(child: Image.asset('assets/images/empty.png')));
+        } else {
+          return Expanded(
+            child: Container(
+              margin: EdgeInsets.symmetric(horizontal: 15),
+              child: StaggeredGridView.countBuilder(
+                crossAxisCount: 4,
+                itemCount: controller.notes.length,
+                itemBuilder: (BuildContext context, int index) => _noteItemView(
+                    themeController,
+                    context,
+                    controller.notes[index],
+                    index,
+                    controller),
+                staggeredTileBuilder: (int index) =>
+                    new StaggeredTile.count(2, index.isEven ? 1.8 : 2.0),
+                mainAxisSpacing: 8.0,
+                crossAxisSpacing: 8.0,
+              ),
             ),
-          ),
-        );
+          );
+        }
       },
     );
   }
